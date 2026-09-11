@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Viaje a Tailandia y Australia</title>
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<style>
+  :root {
+    --primary: #8C6239;
+    --bg-earth: #fdf8f5;
+    --sidebar-bg: #4A3525;
+    --text-dark: #3e2723;
+    --accent: #D4A373;
+    --card-bg: #ffffff;
+  }
+  body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-earth);
+    color: var(--text-dark);
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+  }
+  .sidebar {
+    width: 260px;
+    background-color: var(--sidebar-bg);
+    color: #f5f5dc;
+    display: flex;
+    flex-direction: column;
+    padding: 20px 0;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+  }
+  .sidebar h1 {
+    text-align: center;
+    font-size: 1.4rem;
+    padding: 0 20px 20px 20px;
+    margin: 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+  }
+  .menu {
+    display: flex;
+    flex-direction: column;
+    margin-top: 20px;
+  }
+  .menu button {
+    background: none;
+    border: none;
+    color: #e0d4c8;
+    padding: 15px 25px;
+    text-align: left;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  .menu button:hover, .menu button.active {
+    background-color: var(--primary);
+    color: white;
+  }
+  .content-area {
+    flex: 1;
+    padding: 40px;
+    overflow-y: auto;
+    position: relative;
+  }
+  .bg-decorator {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    font-size: 8rem;
+    opacity: 0.1;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .section-container {
+    position: relative;
+    z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  h2 {
+    color: var(--primary);
+    border-bottom: 2px solid var(--accent);
+    padding-bottom: 10px;
+  }
+  .card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  }
+  .card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+  }
+  .flight-details p {
+    margin: 5px 0;
+  }
+  .tag {
+    background: var(--accent);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr auto;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+  }
+  input, select {
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 0.9rem;
+  }
+  .btn-add {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .btn-add:hover {
+    background-color: #704b2a;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  th {
+    background-color: #fcfcfc;
+    color: var(--text-dark);
+  }
+  .summary-cards {
+    display: flex;
+    gap: 20px;
+    margin-top: 20px;
+  }
+  .summary-card {
+    flex: 1;
+    background: var(--primary);
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .summary-card h3 {
+    margin: 0 0 10px 0;
+    font-size: 1.1rem;
+    opacity: 0.9;
+  }
+  .summary-card p {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="sidebar">
+    <h1>🐘 Trip 2027</h1>
+    <div class="menu">
+      <button :class="{ active: tab === 'vuelos' }" @click="tab = 'vuelos'">✈️ Reserva de Vuelos</button>
+      <button :class="{ active: tab === 'hoteles' }" @click="tab = 'hoteles'">🏨 Hoteles</button>
+      <button :class="{ active: tab === 'actividades' }" @click="tab = 'actividades'">🪷 Cosas para Hacer</button>
+      <button :class="{ active: tab === 'gastos' }" @click="tab = 'gastos'">💰 Planilla de Gastos</button>
+      <button :class="{ active: tab === 'mapa' }" @click="tab = 'mapa'">🗺️ Mapa Interactivo</button>
+    </div>
+  </div>
+
+  <div class="content-area">
+    <div class="bg-decorator">{{ iconoFondo }}</div>
+
+    <div class="section-container">
+      
+      <div v-show="tab === 'vuelos'">
+        <h2>Reserva de Vuelos</h2>
+        <div class="card" v-for="vuelo in vuelos" :key="vuelo.reserva">
+          <div class="card-header">
+            <h3 style="margin:0">{{ vuelo.ruta }}</h3>
+            <span class="tag">{{ vuelo.aerolinea }}</span>
+          </div>
+          <div class="flight-details">
+            <p><strong>🛫 Salida:</strong> {{ vuelo.salida }}</p>
+            <p v-if="vuelo.llegada"><strong>🛬 Llegada:</strong> {{ vuelo.llegada }}</p>
+            <p><strong>🎫 Código de Reserva:</strong> {{ vuelo.reserva }}</p>
+            <p><strong>💳 Pagó:</strong> {{ vuelo.pago }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div v-show="tab === 'gastos'">
+        <h2>Planilla de Gastos Compartida</h2>
+        
+        <div class="card">
+          <form @submit.prevent="agregarGasto" class="form-grid">
+            <input v-model="nuevoGasto.descripcion" type="text" placeholder="Descripción (ej. Cena)" required>
+            <select v-model="nuevoGasto.categoria" required>
+              <option value="" disabled>Categoría</option>
+              <option value="Vuelos">Vuelos</option>
+              <option value="Alojamiento">Alojamiento</option>
+              <option value="Comida">Comida</option>
+              <option value="Excursiones">Excursiones</option>
+              <option value="Transporte">Transporte</option>
+            </select>
+            <select v-model="nuevoGasto.pagador" required>
+              <option value="" disabled>Pagó...</option>
+              <option value="Bianca">Bianca</option>
+              <option value="Martín">Martín</option>
+            </select>
+            <input v-model.number="nuevoGasto.monto" type="number" step="0.01" placeholder="USD" required>
+            <button type="submit" class="btn-add">Sumar</button>
+          </form>
+
+          <table>
+            <thead>
+              <tr>
+                <th>Descripción</th>
+                <th>Categoría</th>
+                <th>Pagó</th>
+                <th>Monto (USD)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(gasto, index) in gastos" :key="index">
+                <td>{{ gasto.descripcion }}</td>
+                <td><span class="tag" style="background:#bcaaa4;">{{ gasto.categoria }}</span></td>
+                <td>{{ gasto.pagador }}</td>
+                <td>$ {{ gasto.monto.toFixed(2) }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="summary-cards">
+          <div class="summary-card">
+            <h3>Total Bianca</h3>
+            <p>$ {{ totalBianca.toFixed(2) }}</p>
+          </div>
+          <div class="summary-card" style="background-color: #5d4037;">
+            <h3>Total Martín</h3>
+            <p>$ {{ totalMartin.toFixed(2) }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div v-show="tab === 'actividades'">
+        <h2>Cosas para Hacer</h2>
+        <div class="card">
+          <form @submit.prevent="agregarActividad" style="display:flex; gap:10px; margin-bottom: 20px;">
+            <input v-model="nuevaActividad.titulo" type="text" placeholder="Ej. Templo de los Monos" style="flex:1" required>
+            <select v-model="nuevaActividad.lugar" required>
+              <option value="Bangkok">Bangkok</option>
+              <option value="Chiang Mai">Chiang Mai</option>
+              <option value="Phuket">Phuket</option>
+              <option value="Perth">Perth</option>
+            </select>
+            <button type="submit" class="btn-add">Guardar Plan</button>
+          </form>
+          
+          <div class="card" v-for="(act, idx) in actividades" :key="idx" style="background:#fafafa; border:1px solid #eaeaea;">
+            <div class="card-header" style="border:none; margin:0; padding:0;">
+              <h4 style="margin:0; color:var(--text-dark);">{{ act.titulo }}</h4>
+              <span class="tag" style="background:var(--sidebar-bg)">📍 {{ act.lugar }}</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div v-show="tab === 'hoteles' || tab === 'mapa'">
+        <h2>{{ tab === 'hoteles' ? 'Hoteles' : 'Mapa Interactivo' }}</h2>
+        <div class="card" style="text-align:center; padding: 40px; color:#888;">
+          <p>Esta sección está lista para configurarla más adelante.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  const { createApp, ref, computed, watch } = Vue;
+
+  createApp({
+    setup() {
+      const tab = ref('vuelos');
+
+      const vuelos = ref([
+        { ruta: 'Buenos Aires > Bangkok', salida: 'Vie 05 Feb 23:55', llegada: 'Dom 07 Feb 15:10', aerolinea: 'Turkish Airlines', reserva: 'VRUR7B', pago: 'Bianca ($2849 USD)' },
+        { ruta: 'Bangkok > Chiang Mai', salida: 'Vie 12 Feb 07:15', llegada: '08:30', aerolinea: 'Air Asia (FD 3411)', reserva: 'RGUJ6N', pago: 'Bianca ($109.15 USD)' },
+        { ruta: 'Phuket > Perth', salida: 'Vie 19 Feb 22:45', llegada: 'Pendiente', aerolinea: 'Jetstar (JQ70)', reserva: 'YRZI6D', pago: 'Bianca ($434.80 USD)' },
+        { ruta: 'Perth > Buenos Aires', salida: 'Lun 01 Mar 22:55', llegada: 'Pendiente', aerolinea: 'LATAM / Qantas (QF654, LA810, LA456)', reserva: 'GMWMHN', pago: 'Martín ($3426 USD)' }
+      ]);
+
+      const gastos = ref([
+        { descripcion: 'Vuelo BA > Bangkok', categoria: 'Vuelos', pagador: 'Bianca', monto: 2849.00 },
+        { descripcion: 'Vuelo Bangkok > Chiang Mai', categoria: 'Vuelos', pagador: 'Bianca', monto: 109.15 },
+        { descripcion: 'Vuelo Phuket > Perth', categoria: 'Vuelos', pagador: 'Bianca', monto: 434.80 },
+        { descripcion: 'Vuelos regreso Perth > BA', categoria: 'Vuelos', pagador: 'Martín', monto: 3426.00 }
+      ]);
+
+      const actividades = ref([]);
+
+      const nuevoGasto = ref({ descripcion: '', categoria: '', pagador: '', monto: null });
+      const nuevaActividad = ref({ titulo: '', lugar: 'Bangkok' });
+
+      const agregarGasto = () => {
+        if(nuevoGasto.value.descripcion && nuevoGasto.value.monto) {
+          gastos.value.push({ ...nuevoGasto.value });
+          nuevoGasto.value = { descripcion: '', categoria: '', pagador: '', monto: null };
+        }
+      };
+
+      const agregarActividad = () => {
+        if(nuevaActividad.value.titulo) {
+          actividades.value.push({ ...nuevaActividad.value });
+          nuevaActividad.value.titulo = '';
+        }
+      };
+
+      const totalBianca = computed(() => {
+        return gastos.value.filter(g => g.pagador === 'Bianca').reduce((sum, g) => sum + g.monto, 0);
+      });
+
+      const totalMartin = computed(() => {
+        return gastos.value.filter(g => g.pagador === 'Martín').reduce((sum, g) => sum + g.monto, 0);
+      });
+
+      const iconoFondo = computed(() => {
+        if(tab.value === 'vuelos') return '✈️';
+        if(tab.value === 'gastos') return '💰';
+        if(tab.value === 'actividades' && nuevaActividad.value.lugar === 'Phuket') return '🏖️';
+        if(tab.value === 'actividades') return '🪷';
+        return '🐘';
+      });
+
+      return {
+        tab, vuelos, gastos, actividades, nuevoGasto, nuevaActividad,
+        agregarGasto, agregarActividad, totalBianca, totalMartin, iconoFondo
+      };
+    }
+  }).mount('#app');
+</script>
+</body>
+</html>
