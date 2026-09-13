@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Viaje a Tailandia y Australia</title>
+<title>Viaje a Tailandia & Australia</title>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <style>
   :root {
@@ -223,8 +223,8 @@
             </select>
             <select v-model="nuevoGasto.pagador" required>
               <option value="" disabled>Pagó...</option>
-              <option value="Bianca">Bianca</option>
-              <option value="Martín">Martín</option>
+              <option value="B">B</option>
+              <option value="M">M</option>
             </select>
             <input v-model.number="nuevoGasto.monto" type="number" step="0.01" placeholder="USD" required>
             <button type="submit" class="btn-add">Sumar</button>
@@ -252,11 +252,11 @@
 
         <div class="summary-cards">
           <div class="summary-card">
-            <h3>Total Bianca</h3>
-            <p>$ {{ totalBianca.toFixed(2) }}</p>
+            <h3>Total B</h3>
+            <p>$ {{ totalB.toFixed(2) }}</p>
           </div>
           <div class="summary-card" style="background-color: #5d4037;">
-            <h3>Total Martín</h3>
+            <h3>Total M</h3>
             <p>$ {{ totalMartin.toFixed(2) }}</p>
           </div>
         </div>
@@ -304,17 +304,17 @@
       const tab = ref('vuelos');
 
       const vuelos = ref([
-        { ruta: 'Buenos Aires > Bangkok', salida: 'Vie 05 Feb 23:55', llegada: 'Dom 07 Feb 15:10', aerolinea: 'Turkish Airlines', reserva: 'VRUR7B', pago: 'Bianca ($2849 USD)' },
-        { ruta: 'Bangkok > Chiang Mai', salida: 'Vie 12 Feb 07:15', llegada: '08:30', aerolinea: 'Air Asia (FD 3411)', reserva: 'RGUJ6N', pago: 'Bianca ($109.15 USD)' },
-        { ruta: 'Phuket > Perth', salida: 'Vie 19 Feb 22:45', llegada: 'Pendiente', aerolinea: 'Jetstar (JQ70)', reserva: 'YRZI6D', pago: 'Bianca ($434.80 USD)' },
-        { ruta: 'Perth > Buenos Aires', salida: 'Lun 01 Mar 22:55', llegada: 'Pendiente', aerolinea: 'LATAM / Qantas (QF654, LA810, LA456)', reserva: 'GMWMHN', pago: 'Martín ($3426 USD)' }
+        { ruta: 'Buenos Aires > Bangkok', salida: 'Vie 05 Feb 23:55', llegada: 'Dom 07 Feb 15:10', aerolinea: 'Turkish Airlines', reserva: 'VRUR7B', pago: 'B ($2849 USD)' },
+        { ruta: 'Bangkok > Chiang Mai', salida: 'Vie 12 Feb 07:15', llegada: '08:30', aerolinea: 'Air Asia (FD 3411)', reserva: 'RGUJ6N', pago: 'B ($109.15 USD)' },
+        { ruta: 'Phuket > Perth', salida: 'Vie 19 Feb 22:45', llegada: 'Pendiente', aerolinea: 'Jetstar (JQ70)', reserva: 'YRZI6D', pago: 'B ($434.80 USD)' },
+        { ruta: 'Perth > Buenos Aires', salida: 'Lun 01 Mar 22:55', llegada: 'Pendiente', aerolinea: 'LATAM / Qantas (QF654, LA810, LA456)', reserva: 'GMWMHN', pago: 'M ($3426 USD)' }
       ]);
 
       const gastos = ref([
-        { descripcion: 'Vuelo BA > Bangkok', categoria: 'Vuelos', pagador: 'Bianca', monto: 2849.00 },
-        { descripcion: 'Vuelo Bangkok > Chiang Mai', categoria: 'Vuelos', pagador: 'Bianca', monto: 109.15 },
-        { descripcion: 'Vuelo Phuket > Perth', categoria: 'Vuelos', pagador: 'Bianca', monto: 434.80 },
-        { descripcion: 'Vuelos regreso Perth > BA', categoria: 'Vuelos', pagador: 'Martín', monto: 3426.00 }
+        { descripcion: 'Vuelo BA > Bangkok', categoria: 'Vuelos', pagador: 'B', monto: 2849.00 },
+        { descripcion: 'Vuelo Bangkok > Chiang Mai', categoria: 'Vuelos', pagador: 'B', monto: 109.15 },
+        { descripcion: 'Vuelo Phuket > Perth', categoria: 'Vuelos', pagador: 'B', monto: 434.80 },
+        { descripcion: 'Vuelos regreso Perth > BA', categoria: 'Vuelos', pagador: 'M', monto: 3426.00 }
       ]);
 
       const actividades = ref([]);
@@ -336,12 +336,12 @@
         }
       };
 
-      const totalBianca = computed(() => {
-        return gastos.value.filter(g => g.pagador === 'Bianca').reduce((sum, g) => sum + g.monto, 0);
+      const totalB = computed(() => {
+        return gastos.value.filter(g => g.pagador === 'B').reduce((sum, g) => sum + g.monto, 0);
       });
 
       const totalMartin = computed(() => {
-        return gastos.value.filter(g => g.pagador === 'Martín').reduce((sum, g) => sum + g.monto, 0);
+        return gastos.value.filter(g => g.pagador === 'M').reduce((sum, g) => sum + g.monto, 0);
       });
 
       const iconoFondo = computed(() => {
@@ -354,7 +354,7 @@
 
       return {
         tab, vuelos, gastos, actividades, nuevoGasto, nuevaActividad,
-        agregarGasto, agregarActividad, totalBianca, totalMartin, iconoFondo
+        agregarGasto, agregarActividad, totalB, totalMartin, iconoFondo
       };
     }
   }).mount('#app');
