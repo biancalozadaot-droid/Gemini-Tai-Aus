@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Viaje a Tailandia & Australia 2027</title>
+<title>Viaje a Tailandia y Australia 2027</title>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <style>
   :root {
     --bg-color: #EBEAE5;
     --border-color: #C2C0B9;
-    --accent-color: #D34500; /* Naranja Azafrán Tailandés */
+    --accent-color: #D34500;
     --text-main: #333333;
     --text-muted: #666666;
     --font-serif: 'Georgia', serif;
@@ -29,7 +29,6 @@
     align-items: center;
   }
 
-  /* Contenedor principal estilo grilla editorial */
   .app-container {
     width: 100%;
     max-width: 1400px;
@@ -40,7 +39,6 @@
     background-color: var(--bg-color);
   }
 
-  /* Menú lateral */
   .sidebar {
     width: 280px;
     border-right: 1px solid var(--border-color);
@@ -98,7 +96,6 @@
     font-weight: bold;
   }
 
-  /* Área de contenido */
   .content-area {
     flex: 1;
     display: flex;
@@ -106,7 +103,6 @@
     overflow-y: auto;
   }
 
-  /* Banner principal */
   .top-banner {
     border-bottom: 1px solid var(--border-color);
     padding: 40px;
@@ -127,7 +123,6 @@
     z-index: 2;
   }
 
-  /* Estructura de dos columnas interiores */
   .split-view {
     display: flex;
     flex: 1;
@@ -149,7 +144,6 @@
     align-items: center;
   }
 
-  /* Estilos para listas editoriales (Vuelos, Gastos) */
   .editorial-list {
     width: 100%;
     margin-top: 20px;
@@ -160,6 +154,7 @@
     padding: 15px 0;
     border-bottom: 1px solid var(--border-color);
     font-size: 0.85rem;
+    align-items: center;
   }
 
   .editorial-row:last-child {
@@ -187,9 +182,9 @@
     font-weight: bold;
   }
 
-  /* Formularios limpios */
   .clean-form {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 30px;
     border: 1px solid var(--border-color);
@@ -205,6 +200,7 @@
     font-family: var(--font-sans);
     font-size: 0.85rem;
     outline: none;
+    min-width: 120px;
   }
   
   .clean-form input:focus, .clean-form select:focus {
@@ -221,6 +217,8 @@
     letter-spacing: 1px;
     cursor: pointer;
     transition: all 0.3s;
+    height: 35px;
+    align-self: flex-end;
   }
 
   .btn-outline:hover {
@@ -228,7 +226,6 @@
     color: var(--bg-color);
   }
 
-  /* Efecto relieve tipo estatuas de Atenas pero adaptado */
   .embossed-art {
     width: 250px;
     height: 250px;
@@ -261,7 +258,6 @@
     font-family: var(--font-serif);
     color: var(--accent-color);
   }
-
 </style>
 </head>
 <body>
@@ -300,67 +296,52 @@
     <div class="split-view">
       <div class="data-section">
         
-        <!-- VUELOS -->
-        <div v-if="tab === 'vuelos'" class="editorial-list">
-          <div style="margin-bottom: 30px; font-weight: bold; color: var(--accent-color);">THE ITINERARY</div>
+        <div v-if="tab === 'vuelos'">
+          <div style="margin-bottom: 30px; font-weight: bold; color: var(--accent-color);">EL ITINERARIO</div>
           
-          <div class="editorial-row" v-for="vuelo in vuelos" :key="vuelo.reserva">
-            <div class="col-date">{{ vuelo.fecha }}</div>
-            <div class="col-info">{{ vuelo.ruta }}</div>
-            <div class="col-desc">
-              {{ vuelo.aerolinea }}<br>
-              <span style="color: var(--text-muted); font-size: 0.75rem;">Reserva: {{ vuelo.reserva }}</span>
-            </div>
-            <div class="col-price">{{ vuelo.pago }}</div>
-          </div>
-        </div>
-
-        <!-- GASTOS -->
-        <div v-if="tab === 'gastos'">
-          <div style="margin-bottom: 30px; font-weight: bold; color: var(--accent-color);">EXPENSE TRACKER</div>
-          
-          <form @submit.prevent="agregarGasto" class="clean-form">
-            <input v-model="nuevoGasto.descripcion" type="text" placeholder="Descripción" required style="flex:2">
-            <select v-model="nuevoGasto.categoria" required style="flex:1">
-              <option value="" disabled>Categoría</option>
-              <option value="Vuelos">Vuelos</option>
-              <option value="Alojamiento">Alojamiento</option>
-              <option value="Comida">Comida</option>
-              <option value="Excursiones">Excursiones</option>
-            </select>
-            <select v-model="nuevoGasto.pagador" required style="flex:1">
-              <option value="" disabled>Pagó...</option>
-              <option value="B">B</option>
-              <option value="M">M</option>
-            </select>
-            <input v-model.number="nuevoGasto.monto" type="number" step="0.01" placeholder="USD" required style="flex:1">
-            <button type="submit" class="btn-outline">Sumar</button>
+          <form @submit.prevent="agregarVuelo" class="clean-form">
+            <input v-model="nuevoVuelo.fecha" type="text" placeholder="Día y Mes" required style="flex:1">
+            <input v-model="nuevoVuelo.ruta" type="text" placeholder="Ruta de viaje" required style="flex:1">
+            <input v-model="nuevoVuelo.aerolinea" type="text" placeholder="Aerolínea" required style="flex:1">
+            <input v-model="nuevoVuelo.reserva" type="text" placeholder="Código de reserva" required style="flex:1">
+            <input v-model="nuevoVuelo.pago" type="text" placeholder="Quién pagó" required style="flex:1">
+            <button type="submit" class="btn-outline">Guardar</button>
           </form>
 
           <div class="editorial-list">
-            <div class="editorial-row" v-for="(gasto, index) in gastos" :key="index">
-              <div class="col-date">{{ gasto.categoria }}</div>
-              <div class="col-desc">{{ gasto.descripcion }}</div>
-              <div class="col-info" style="text-align: right; padding-right: 20px;">{{ gasto.pagador }}</div>
-              <div class="col-price">USD {{ gasto.monto.toFixed(2) }}</div>
-            </div>
-          </div>
-
-          <div style="display: flex; gap: 20px;">
-            <div class="total-box" style="flex:1">
-              <h3 style="color: var(--text-main)">TOTAL B</h3>
-              <div style="font-size: 2rem;">USD {{ totalB.toFixed(2) }}</div>
-            </div>
-            <div class="total-box" style="flex:1; background: var(--accent-color); color: var(--bg-color);">
-              <h3 style="color: var(--bg-color)">TOTAL M</h3>
-              <div style="font-size: 2rem;">USD {{ totalMartin.toFixed(2) }}</div>
+            <div class="editorial-row" v-for="vuelo in vuelos" :key="vuelo.reserva">
+              <div class="col-date">{{ vuelo.fecha }}</div>
+              <div class="col-info">{{ vuelo.ruta }}</div>
+              <div class="col-desc">
+                {{ vuelo.aerolinea }}<br>
+                <span style="color: var(--text-muted); font-size: 0.75rem;">Reserva: {{ vuelo.reserva }}</span>
+              </div>
+              <div class="col-price">{{ vuelo.pago }}</div>
             </div>
           </div>
         </div>
 
-        <!-- ACTIVIDADES -->
+        <div v-if="tab === 'hoteles'">
+          <div style="margin-bottom: 30px; font-weight: bold; color: var(--accent-color);">ALOJAMIENTO</div>
+          
+          <form @submit.prevent="agregarHotel" class="clean-form">
+            <input v-model="nuevoHotel.nombre" type="text" placeholder="Nombre del hotel" required style="flex:2">
+            <input v-model="nuevoHotel.ciudad" type="text" placeholder="Ciudad" required style="flex:1">
+            <input v-model="nuevoHotel.fechas" type="text" placeholder="Fechas de estadía" required style="flex:1">
+            <button type="submit" class="btn-outline">Guardar</button>
+          </form>
+
+          <div class="editorial-list">
+            <div class="editorial-row" v-for="(hotel, idx) in hoteles" :key="idx">
+              <div class="col-date">{{ hotel.ciudad }}</div>
+              <div class="col-desc" style="font-family: var(--font-serif); font-size: 1.1rem;">{{ hotel.nombre }}</div>
+              <div class="col-info" style="text-align: right;">{{ hotel.fechas }}</div>
+            </div>
+          </div>
+        </div>
+
         <div v-if="tab === 'actividades'">
-          <div style="margin-bottom: 30px; font-weight: bold; color: var(--accent-color);">THINGS TO DO</div>
+          <div style="margin-bottom: 30px; font-weight: bold; color: var(--accent-color);">COSAS PARA HACER</div>
           
           <form @submit.prevent="agregarActividad" class="clean-form">
             <input v-model="nuevaActividad.titulo" type="text" placeholder="Actividad o Lugar" required style="flex:2">
@@ -381,14 +362,69 @@
           </div>
         </div>
 
-        <!-- PLACEHOLDERS -->
-        <div v-if="tab === 'hoteles' || tab === 'mapa'" style="text-align: center; padding-top: 50px; color: var(--text-muted);">
-          <p style="text-transform: uppercase; letter-spacing: 2px;">Sección en construcción</p>
+        <div v-if="tab === 'gastos'">
+          <div style="margin-bottom: 30px; font-weight: bold; color: var(--accent-color);">PLANILLA DE GASTOS</div>
+          
+          <form @submit.prevent="agregarGasto" class="clean-form">
+            <input v-model="nuevoGasto.descripcion" type="text" placeholder="Descripción" required style="flex:2">
+            <select v-model="nuevoGasto.categoria" required style="flex:1">
+              <option value="" disabled>Categoría</option>
+              <option value="Vuelos">Vuelos</option>
+              <option value="Alojamiento">Alojamiento</option>
+              <option value="Comida">Comida</option>
+              <option value="Excursiones">Excursiones</option>
+            </select>
+            <select v-model="nuevoGasto.pagador" required style="flex:1">
+              <option value="" disabled>Pagó...</option>
+              <option value="B">B</option>
+              <option value="M">M</option>
+            </select>
+            <input v-model.number="nuevoGasto.monto" type="number" step="0.01" placeholder="USD" required style="flex:1">
+            <button type="submit" class="btn-outline">Guardar</button>
+          </form>
+
+          <div class="editorial-list">
+            <div class="editorial-row" v-for="(gasto, index) in gastos" :key="index">
+              <div class="col-date">{{ gasto.categoria }}</div>
+              <div class="col-desc">{{ gasto.descripcion }}</div>
+              <div class="col-info" style="text-align: right; padding-right: 20px;">{{ gasto.pagador }}</div>
+              <div class="col-price">USD {{ gasto.monto.toFixed(2) }}</div>
+            </div>
+          </div>
+
+          <div style="display: flex; gap: 20px;">
+            <div class="total-box" style="flex:1">
+              <h3 style="color: var(--text-main)">TOTAL B</h3>
+              <div style="font-size: 2rem;">USD {{ totalB.toFixed(2) }}</div>
+            </div>
+            <div class="total-box" style="flex:1; background: var(--accent-color); color: var(--bg-color);">
+              <h3 style="color: var(--bg-color)">TOTAL M</h3>
+              <div style="font-size: 2rem;">USD {{ totalM.toFixed(2) }}</div>
+            </div>
+          </div>
+        </div>
+
+        <div v-if="tab === 'mapa'">
+          <div style="margin-bottom: 30px; font-weight: bold; color: var(--accent-color);">MAPA Y UBICACIONES</div>
+          
+          <form @submit.prevent="agregarPunto" class="clean-form">
+            <input v-model="nuevoPunto.nombre" type="text" placeholder="Nombre del lugar" required style="flex:1">
+            <input v-model="nuevoPunto.url" type="url" placeholder="Link de Google Maps" required style="flex:2">
+            <button type="submit" class="btn-outline">Guardar</button>
+          </form>
+
+          <div class="editorial-list">
+            <div class="editorial-row" v-for="(punto, idx) in puntosMapa" :key="idx">
+              <div class="col-desc" style="font-family: var(--font-serif); font-size: 1.1rem;">{{ punto.nombre }}</div>
+              <div class="col-info" style="text-align: right;">
+                <a :href="punto.url" target="_blank" style="color: var(--accent-color); text-decoration: none; font-weight: bold;">Abrir Mapa ↗</a>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
 
-      <!-- Galería Lateral (Reemplaza las estatuas griegas) -->
       <div class="art-section">
         <div class="embossed-art">
           {{ iconoArte1 }}
@@ -416,6 +452,10 @@
         { fecha: 'MAR 01', ruta: 'PER > BUE', aerolinea: 'LATAM / Qantas', reserva: 'GMWMHN', pago: 'M (USD 3426)' }
       ]);
 
+      const hoteles = ref([
+        { nombre: 'Templo Resort', ciudad: 'Chiang Mai', fechas: '12 Feb - 15 Feb' }
+      ]);
+
       const gastos = ref([
         { descripcion: 'Vuelo BA > Bangkok', categoria: 'Vuelos', pagador: 'B', monto: 2849.00 },
         { descripcion: 'Vuelo Bangkok > Chiang Mai', categoria: 'Vuelos', pagador: 'B', monto: 109.15 },
@@ -428,8 +468,29 @@
         { lugar: 'Chiang Mai', titulo: 'Visitar templos antiguos' }
       ]);
 
+      const puntosMapa = ref([
+        { nombre: 'Gran Palacio de Bangkok', url: 'https://maps.google.com' }
+      ]);
+
+      const nuevoVuelo = ref({ fecha: '', ruta: '', aerolinea: '', reserva: '', pago: '' });
+      const nuevoHotel = ref({ nombre: '', ciudad: '', fechas: '' });
       const nuevoGasto = ref({ descripcion: '', categoria: '', pagador: '', monto: null });
       const nuevaActividad = ref({ titulo: '', lugar: 'Bangkok' });
+      const nuevoPunto = ref({ nombre: '', url: '' });
+
+      const agregarVuelo = () => {
+        if(nuevoVuelo.value.fecha && nuevoVuelo.value.ruta) {
+          vuelos.value.push({ ...nuevoVuelo.value });
+          nuevoVuelo.value = { fecha: '', ruta: '', aerolinea: '', reserva: '', pago: '' };
+        }
+      };
+
+      const agregarHotel = () => {
+        if(nuevoHotel.value.nombre && nuevoHotel.value.ciudad) {
+          hoteles.value.push({ ...nuevoHotel.value });
+          nuevoHotel.value = { nombre: '', ciudad: '', fechas: '' };
+        }
+      };
 
       const agregarGasto = () => {
         if(nuevoGasto.value.descripcion && nuevoGasto.value.monto) {
@@ -445,21 +506,28 @@
         }
       };
 
+      const agregarPunto = () => {
+        if(nuevoPunto.value.nombre && nuevoPunto.value.url) {
+          puntosMapa.value.push({ ...nuevoPunto.value });
+          nuevoPunto.value = { nombre: '', url: '' };
+        }
+      };
+
       const totalB = computed(() => {
         return gastos.value.filter(g => g.pagador === 'B').reduce((sum, g) => sum + g.monto, 0);
       });
 
-      const totalMartin = computed(() => {
+      const totalM = computed(() => {
         return gastos.value.filter(g => g.pagador === 'M').reduce((sum, g) => sum + g.monto, 0);
       });
 
       const tituloSeccion = computed(() => {
         const titulos = {
-          'vuelos': 'FLIGHTS',
-          'hoteles': 'HOTELS',
-          'actividades': 'TO DO',
-          'gastos': 'EXPENSES',
-          'mapa': 'MAP'
+          'vuelos': 'VUELOS',
+          'hoteles': 'HOTELES',
+          'actividades': 'PLANES',
+          'gastos': 'GASTOS',
+          'mapa': 'MAPAS'
         };
         return titulos[tab.value];
       });
@@ -473,9 +541,10 @@
       });
 
       return {
-        tab, vuelos, gastos, actividades, nuevoGasto, nuevaActividad,
-        agregarGasto, agregarActividad, totalB, totalMartin, 
-        tituloSeccion, iconoArte1, iconoArte2
+        tab, vuelos, hoteles, gastos, actividades, puntosMapa,
+        nuevoVuelo, nuevoHotel, nuevoGasto, nuevaActividad, nuevoPunto,
+        agregarVuelo, agregarHotel, agregarGasto, agregarActividad, agregarPunto, 
+        totalB, totalM, tituloSeccion, iconoArte1, iconoArte2
       };
     }
   }).mount('#app');
