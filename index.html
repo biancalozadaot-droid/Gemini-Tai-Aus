@@ -6,7 +6,7 @@
 <title>Tai & Aus</title>
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="stylesheet" href="estilo1.css">
+<link id="temaVisual" rel="stylesheet" href="estilo1.css">
 </head>
 <body>
 <div id="app" class="app-container">
@@ -29,6 +29,9 @@
       </button>
       <button :class="{ active: tab === 'gastos' }" @click="tab = 'gastos'">
         <span>Gastos</span> <span>IV</span>
+      </button>
+      <button @click="alternarTema">
+      <span>Cambiar diseño</span> <span>✧</span>
       </button>
     </div>
   </div>
@@ -308,6 +311,11 @@
         agregarVuelo, agregarHotel, agregarActividad, agregarGasto, 
         totalesB, totalesM, tituloSeccion
       };
+      const temaActual = ref('estilo1')
+      const alternarTema = () => {
+        temaActual.value = temaActual.value === 'estilo1' ? 'origami' : 'estilo1'
+        document.getElementById('temaVisual').href = temaActual.value + '.css'
+      }
     }
   }).mount('#app');
 </script>
