@@ -219,10 +219,8 @@
     </div>
   </div>
 </div>
-
 <script>
   const { createApp, ref, computed } = Vue;
-
   createApp({
     setup() {
       const tab = ref('vuelos');
@@ -311,11 +309,14 @@
         agregarVuelo, agregarHotel, agregarActividad, agregarGasto, 
         totalesB, totalesM, tituloSeccion
       };
-      const temaActual = ref('estilo1')
-      const alternarTema = () => {
-        temaActual.value = temaActual.value === 'estilo1' ? 'origami' : 'estilo1'
-        document.getElementById('temaVisual').href = temaActual.value + '.css'
-      }
+    const temas = ['estilo1', 'origami', 'estilo3', 'estilo4']
+    const temaActual = ref('estilo1')
+    
+    const alternarTema = () => {
+      const indiceActual = temas.indexOf(temaActual.value)
+      const proximoIndice = (indiceActual + 1) % temas.length
+      temaActual.value = temas[proximoIndice]
+      document.getElementById('temaVisual').href = temaActual.value + '.css'
     }
   }).mount('#app');
 </script>
