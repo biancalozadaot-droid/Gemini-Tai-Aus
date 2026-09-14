@@ -221,9 +221,13 @@
 </div>
 <script>
   const { createApp, ref, computed } = Vue;
+
   createApp({
     setup() {
       const tab = ref('vuelos');
+      
+      const temas = ['estilo1', 'origami', 'estilo3', 'estilo4'];
+      const temaActual = ref('estilo1');
 
       const vuelos = ref([
         { fecha: 'FEB 05', ruta: 'BUE > BKK', aerolinea: 'Turkish Airlines', reserva: 'VRUR7B' },
@@ -303,20 +307,20 @@
         return titulos[tab.value];
       });
 
+      const alternarTema = () => {
+        const indiceActual = temas.indexOf(temaActual.value);
+        const proximoIndice = (indiceActual + 1) % temas.length;
+        temaActual.value = temas[proximoIndice];
+        document.getElementById('temaVisual').href = temaActual.value + '.css';
+      };
+
       return {
         tab, vuelos, hoteles, actividades, gastos,
         nuevoVuelo, nuevoHotel, nuevaActividad, nuevoGasto,
         agregarVuelo, agregarHotel, agregarActividad, agregarGasto, 
-        totalesB, totalesM, tituloSeccion
+        totalesB, totalesM, tituloSeccion,
+        temaActual, alternarTema
       };
-    const temas = ['estilo1', 'origami', 'estilo3', 'estilo4']
-    const temaActual = ref('estilo1')
-    
-    const alternarTema = () => {
-      const indiceActual = temas.indexOf(temaActual.value)
-      const proximoIndice = (indiceActual + 1) % temas.length
-      temaActual.value = temas[proximoIndice]
-      document.getElementById('temaVisual').href = temaActual.value + '.css'
     }
   }).mount('#app');
 </script>
